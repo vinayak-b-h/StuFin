@@ -93,7 +93,11 @@ CREATE TABLE IF NOT EXISTS savings_goals (
   emoji       VARCHAR(10)   NOT NULL DEFAULT '🎯',
   target      DECIMAL(12,2) NOT NULL CHECK (target > 0),
   saved       DECIMAL(12,2) NOT NULL DEFAULT 0.00
+<<<<<<< HEAD
               CHECK (saved >= 0 AND saved <= target),
+=======
+              CHECK (saved >= 0),
+>>>>>>> 8079931ea00c6d859bec6d9190154f5e21ce91e9
   deadline    DATE          DEFAULT NULL,
   is_reached  TINYINT(1)    NOT NULL DEFAULT 0,
   created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
