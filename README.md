@@ -1,114 +1,72 @@
-# StuFin – Setup Guide (Node.js + MySQL)
+# StuFin – Student Finance Manager
 
-## Folder Structure
+StuFin is a lightweight web app that helps students track income, expenses, budgets, savings goals, and bill reminders — all in one clean dashboard.
+
+**Live app:** https://stufin.vercel.app
+
+## Features
+
+- 🔐 **Auth** – Register/login with email & password
+- 📊 **Dashboard** – Budget health bar, KPI cards (income, expenses, balance, budget left), spending charts
+- 💳 **Transactions** – Add, search, and filter income/expense records by category and type
+- 🎯 **Budgets** – Set monthly spending limits per category
+- ⭐ **Savings Goals** – Track progress toward targets with deadlines
+- 🔔 **Reminders** – Never miss a bill due date
+- 📄 **Reports** – Export transactions as PDF or CSV
+- 🛠️ **Admin Panel** – Manage categories and view platform stats
+
+## Tech Stack
+
+- HTML, CSS, JavaScript (vanilla, no frameworks)
+- `localStorage` used as the client-side data store (simulates a SQL-backed backend)
+- `schema.sql` documents the intended relational schema (users, transactions, budgets, goals, reminders, categories) for future backend integration
+
+## Project Structure
+
 ```
-stufin-backend/
-├── public/          ← Frontend (HTML + CSS + JS) served by Express
-│   ├── index.html
-│   ├── style.css
-│   └── app.js
-├── routes/
-│   ├── auth.js
-│   ├── transactions.js
-│   ├── categories.js   (also exports budgetsRouter)
-│   └── goals.js        (also exports remindersRouter, adminRouter)
-├── middleware/
-│   └── auth.js
-├── db.js            ← MySQL connection pool
-├── server.js        ← Express entry point
-├── schema.sql       ← Run this in MySQL first
-├── .env             ← Your DB credentials go here
-└── package.json
-```
-
----
-
-## Step 1 — Install MySQL
-Download and install MySQL Community Server:
-https://dev.mysql.com/downloads/mysql/
-
-During setup, set a root password — you'll need it in Step 3.
-
----
-
-## Step 2 — Create the Database
-Open MySQL Workbench (or MySQL shell) and run:
-```sql
-SOURCE path/to/stufin-backend/schema.sql;
-```
-Or paste the contents of schema.sql into MySQL Workbench and execute.
-
----
-
-## Step 3 — Configure .env
-Open `.env` and fill in your MySQL password:
-```
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=your_actual_password
-DB_NAME=stufin
-SESSION_SECRET=any_random_string
-PORT=3000
+StuFin/
+├── index.html    # App markup (auth screen + dashboard shell)
+├── app.js        # All app logic: auth, CRUD, charts, exports
+├── style.css     # Design system & styling
+└── schema.sql    # Reference SQL schema
 ```
 
----
+## Running Locally
 
-## Step 4 — Install Node.js dependencies
-Open VS Code terminal (Ctrl + `) inside the stufin-backend folder:
+Since this is a static site, no build step is required.
+
 ```bash
-npm install
+git clone https://github.com/vinayak-b-h/StuFin.git
+cd StuFin
 ```
 
----
+Then just open `index.html` in your browser, or serve it locally:
 
-## Step 5 — Start the server
 ```bash
-# Normal start
-node server.js
-
-# Auto-restart on file changes (recommended during development)
-npm run dev
+npx serve .
 ```
 
-You should see:
-```
-✅  MySQL connected successfully
-🚀  StuFin server running at http://localhost:3000
-```
+## Deployment
 
----
+This project is deployed on **Vercel** as a static site.
 
-## Step 6 — Open the app
-Go to: http://localhost:3000
+To deploy your own copy:
 
-Register a new account and start using StuFin!
+1. Push this repo to your own GitHub account.
+2. Go to [vercel.com](https://vercel.com) → **Add New Project** → import the repo.
+3. Framework preset: **Other**. Leave build/output commands empty.
+4. Click **Deploy**.
 
----
+Every push to `main` auto-redeploys the live site.
 
-## API Reference
+## Notes on Data
 
-| Method | Endpoint                        | Description                  |
-|--------|---------------------------------|------------------------------|
-| POST   | /api/auth/register              | Create account               |
-| POST   | /api/auth/login                 | Login                        |
-| POST   | /api/auth/logout                | Logout                       |
-| GET    | /api/auth/session               | Check current session        |
-| GET    | /api/transactions               | Get all transactions         |
-| POST   | /api/transactions               | Add transaction              |
-| DELETE | /api/transactions/:id           | Delete transaction           |
-| GET    | /api/transactions/summary/monthly | 6-month income/expense trend|
-| GET    | /api/categories                 | Get all categories           |
-| POST   | /api/categories                 | Add category                 |
-| DELETE | /api/categories/:id             | Delete category              |
-| GET    | /api/budgets?month=YYYY-MM      | Get budgets with actuals     |
-| POST   | /api/budgets                    | Set category budget          |
-| DELETE | /api/budgets/:id                | Remove budget                |
-| GET    | /api/goals                      | Get savings goals            |
-| POST   | /api/goals                      | Create goal                  |
-| PATCH  | /api/goals/:id/add              | Add savings to goal          |
-| DELETE | /api/goals/:id                  | Delete goal                  |
-| GET    | /api/reminders                  | Get reminders                |
-| POST   | /api/reminders                  | Add reminder                 |
-| DELETE | /api/reminders/:id              | Delete reminder              |
-| GET    | /api/admin/stats                | Platform statistics          |
+All data (users, transactions, budgets, goals, reminders) is stored in the browser's `localStorage`. This means:
+
+- Data is **per-browser/per-device** and not shared across devices.
+- Clearing browser storage will erase all saved data.
+- No real backend/database is currently connected — `schema.sql` is provided as a reference for a future real backend (e.g. Postgres/Supabase) integration.
+
+## License
+
+This project is for personal/educational use.
